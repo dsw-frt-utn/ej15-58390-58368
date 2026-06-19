@@ -13,21 +13,25 @@ namespace Dsw2026Ej15.Api
             builder.Services.AddSingleton<IPersistence, PersistenceInMemory>();
             builder.Services.AddControllers();
             builder.Services.AddSwaggerGen();
+            builder.Services.AddHealthChecks();
 
             var app = builder.Build();
 
+            app.UseMiddleware<Dsw2026Ej15.Api.Middlewares.ExceptionMiddleware>();
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
             {
              
                app.UseSwagger();
                 app.UseSwaggerUI();
+                
             }
 
             app.UseAuthorization();
 
-
+            
             app.MapControllers();
+            app.MapHealthChecks("/health-check");
 
             app.Run();
         }
